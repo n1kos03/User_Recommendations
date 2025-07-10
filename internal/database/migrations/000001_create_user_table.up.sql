@@ -1,0 +1,18 @@
+BEGIN;
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  password VARCHAR(50) NOT NULL,
+  favorite_product VARCHAR(50) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+COMMIT;
+
+BEGIN;
+
+CREATE INDEX idx_users_favorite_product ON users(favorite_product);
+
+COMMIT;
