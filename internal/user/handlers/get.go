@@ -16,7 +16,7 @@ func (h *UserHandler) GETUser(c *gin.Context) {
 		slog.Error("Error getting users", "Error: ", err)
 		return
 	}
-	
+
 	c.JSON(http.StatusOK, gin.H{
 		"users": users,
 	})

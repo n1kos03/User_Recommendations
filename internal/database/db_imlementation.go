@@ -1,13 +1,48 @@
 package database
 
 import (
-	"User_Recommendations/internal/models"
+	"database/sql"
 	"log/slog"
+	"net"
+	"net/url"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/lib/pq"
 )
+
+type Database struct {
+	Conn *sql.DB
+}
+
+type DBConfig struct {
+	User    string
+	Pass    string
+	Name    string
+	Host    string
+	Port    string
+	SSLMode string
+}
+
+func NewDatabase(cfg DBConfig) (*Database, error) {
+	dbURL := &url.URL{
+		Scheme:   "postgres",
+		User:     url.UserPassword(cfg.User, cfg.Pass),
+		Host:     net.JoinHostPort(cfg.Host, cfg.Port),
+		Path:     cfg.Name,
+		RawQuery: "sslmode=" + url.PathEscape(cfg.SSLMode),
+	}
+
+	slog.Info("Connecting to database", "URL: ", dbURL.String())
+
+	db, err := sql.Open("postgres", dbURL.String())
+	if err != nil {
+		return nil, err
+	}
+
+	return &Database{Conn: db}, nil
+}
 
 func (db *Database) CheckDBConnection() {
 	err := db.Conn.Ping()
@@ -36,42 +71,10 @@ func (db *Database) RunMigrations() {
 	}
 
 	err = m.Up()
-	if err != nil && err != migrate.ErrNoChange{
+	if err != nil && err != migrate.ErrNoChange {
 		slog.Error("Error running migrations", "Error: ", err)
 		return
 	}
 
 	slog.Info("Migrations successful")
-}
-
-func (db *Database) GetAllUsers() ([]models.User, error) {
-	var users []models.User
-
-	rows, err := db.Conn.Query("SELECT * FROM users")
-	if err != nil {
-		return nil, err
-	}
-
-	defer rows.Close()
-
-	for rows.Next() {
-		var user models.User
-		err := rows.Scan(&user.ID, &user.Name, &user.Password, &user.FavoriteProduct, &user.CreatedAt, &user.UpdatedAt)
-		if err != nil {
-			return nil, err
-		}
-
-		users = append(users, user)
-	}
-
-	return users, nil
-}
-
-func (db *Database) InsertUser(user *models.User) error {
-	_, err := db.Conn.Exec("INSERT INTO users (name, password, favorite_product) VALUES ($1, $2, $3)", user.Name, user.Password, user.FavoriteProduct)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }

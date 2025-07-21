@@ -1,9 +1,10 @@
 package handlers
 
 import (
-	"User_Recommendations/internal/models"
 	"log/slog"
 	"net/http"
+
+	"github.com/n1kos03/User_Recommendations/internal/models"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,6 +25,14 @@ func (h *UserHandler) POSTUser(c *gin.Context) {
 			"message": "Error inserting user",
 		})
 		slog.Error("Error inserting user", "Error: ", err)
+		return
+	}
+
+	if err := h.Producer.SendMessage("user_updates", []any{user}); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Error sending message to Kafka",
+		})
+		slog.Error("Error sending message to Kafka", "Error: ", err)
 		return
 	}
 
