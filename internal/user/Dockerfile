@@ -5,19 +5,13 @@ WORKDIR /app
 COPY ./go.mod ./go.sum ./
 RUN go mod download
 
-COPY cmd/ cmd/
+COPY cmd/user_service_main.go cmd/user_service_main.go
 COPY internal/database/ internal/database/
-COPY internal/kafka/ internal/kafka/
-COPY internal/models/ internal/models/ 
+COPY internal/kafka/producer.go internal/kafka/producer.go
+COPY internal/models/user.go internal/models/user.go
+COPY internal/models/kafka_events.go internal/models/kafka_events.go
 COPY internal/user/ internal/user/
 
-RUN go build -o user-service ./cmd/main.go
-
-# FROM debian:bullseye-slim
-
-# WORKDIR /root/
-# COPY --from=builder /app/user-service .
+RUN go build -o user-service ./cmd/user_service_main.go
 
 EXPOSE 8080
-
-# CMD ["./user-service"]

@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (h *UserHandler) POSTUser(c *gin.Context) {
+func (h *UserService) POSTUser(c *gin.Context) {
 	var user models.User
 	if err := c.ShouldBindBodyWithJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -28,7 +28,12 @@ func (h *UserHandler) POSTUser(c *gin.Context) {
 		return
 	}
 
-	if err := h.Producer.SendMessage("user_updates", []any{user}); err != nil {
+	userKafkaEvent := models.UserMessageEvent{
+		UserID:  user.ID,
+		Product: user.FavoriteProduct,
+	}
+
+	if err := h.Producer.SendMessage("user_updates", []any{userKafkaEvent}); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Error sending message to Kafka",
 		})

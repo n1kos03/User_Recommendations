@@ -5,11 +5,11 @@ import (
 	"github.com/n1kos03/User_Recommendations/internal/kafka"
 )
 
-type UserHandler struct {
+type UserService struct {
 	DB       *database.Database
 	Producer *kafka.Producer
 }
 
-func NewUserHandler(db *database.Database, producer *kafka.Producer) *UserHandler {
-	return &UserHandler{DB: db, Producer: producer}
+func NewUserService(db *database.Database, producer *kafka.Producer) *UserService {
+	return &UserService{DB: db, Producer: producer}
 }

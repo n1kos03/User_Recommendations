@@ -43,7 +43,7 @@ func main() {
 	}
 	defer produser.Close()
 
-	userHandlers := handlers.NewUserHandler(DB, produser)
+	userService := handlers.NewUserService(DB, produser)
 
 	router := gin.Default()
 
@@ -53,9 +53,9 @@ func main() {
 		})
 	})
 
-	router.GET("/users", userHandlers.GETUser)
-	router.POST("/users", userHandlers.POSTUser)
-	router.PUT("/users/:id", userHandlers.PUTUser)
+	router.GET("/users", userService.GETUser)
+	router.POST("/users", userService.POSTUser)
+	router.PUT("/users/:id", userService.PUTUser)
 
 	if err := router.Run(":8080"); err != nil {
 		slog.Error("Error running server", "Error: ", err)

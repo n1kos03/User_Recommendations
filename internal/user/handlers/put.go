@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (h *UserHandler) PUTUser(c *gin.Context) {
+func (h *UserService) PUTUser(c *gin.Context) {
 	user, err := h.DB.UpdateUser(c.Param("id"), c.Query("favorite_product"))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

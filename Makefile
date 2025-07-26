@@ -1,4 +1,4 @@
-SOURCES=internal/user/handlers/*.go internal/database/*.go internal/kafka/*.go cmd/main.go
+SOURCES=internal/user/handlers/*.go internal/database/*.go internal/kafka/*.go cmd/*.go
 
 all: run-services
 

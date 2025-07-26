@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (h *UserHandler) GETUser(c *gin.Context) {
+func (h *UserService) GETUser(c *gin.Context) {
 	users, err := h.DB.GetAllUsers()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
