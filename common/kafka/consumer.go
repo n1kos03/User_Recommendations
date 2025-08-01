@@ -6,8 +6,9 @@ import (
 	"strings"
 
 	kfk "github.com/confluentinc/confluent-kafka-go/v2/kafka"
-	"github.com/n1kos03/User_Recommendations/internal/models"
-	"github.com/n1kos03/User_Recommendations/internal/recommendations/handlers"
+	"github.com/n1kos03/User_Recommendations/common/models"
+	"github.com/n1kos03/User_Recommendations/services/recommendations/handlers"
+	// "github.com/n1kos03/User_Recommendations/services/recommendations/handlers"
 )
 
 type Consumer struct {

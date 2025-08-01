@@ -1,8 +1,6 @@
 package handlers
 
-import (
-	"github.com/n1kos03/User_Recommendations/internal/database"
-)
+import "github.com/n1kos03/User_Recommendations/common/database"
 
 type RecommendationService struct {
 	DB *database.Database

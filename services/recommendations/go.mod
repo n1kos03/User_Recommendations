@@ -1,3 +1,3 @@
-module github.com/n1kos03/User_Recommendations/services/recommendations
+module github.com/n1kos03/User-Recommendations/services/recommendations
 
 go 1.24.1

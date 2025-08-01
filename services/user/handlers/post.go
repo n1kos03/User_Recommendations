@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/n1kos03/User_Recommendations/internal/models"
+	"github.com/n1kos03/User_Recommendations/common/models"
 
 	"github.com/gin-gonic/gin"
 )

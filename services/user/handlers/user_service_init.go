@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"github.com/n1kos03/User_Recommendations/internal/database"
-	"github.com/n1kos03/User_Recommendations/internal/kafka"
+	"github.com/n1kos03/User_Recommendations/common/database"
+	"github.com/n1kos03/User_Recommendations/common/kafka"
 )
 
 type UserService struct {
