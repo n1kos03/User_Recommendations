@@ -3,8 +3,9 @@ package database
 import (
 	"log/slog"
 
-	"github.com/lib/pq"
 	"github.com/n1kos03/User_Recommendations/common/models"
+
+	"github.com/lib/pq"
 
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
