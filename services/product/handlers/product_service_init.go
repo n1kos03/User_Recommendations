@@ -6,4 +6,9 @@ import (
 
 type ProductService struct {
 	DB *database.Database
+	// Producer *kafka.Producer
+}
+
+func NewProductService(db *database.Database /*, producer *kafka.Producer*/) *ProductService {
+	return &ProductService{DB: db /*, Producer: producer*/}
 }

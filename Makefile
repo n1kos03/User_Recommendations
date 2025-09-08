@@ -1,8 +1,8 @@
-SOURCES=internal/user/handlers/*.go internal/database/*.go internal/kafka/*.go cmd/*.go
+ALL_SOURCES=services/user/handlers/*.go common/database/*.go common/kafka/*.go cmd/*.go common/models/*.go services/product/handlers/*.go services/recommendations/handlers/*.go
 
 all: run-services
 
-run-services: lint
+run-services: #lint
 	docker-compose up --build -d
 
 stop-services:
@@ -12,4 +12,4 @@ lint: fmt
 	golangci-lint run --disable=depguard ./...
 
 fmt:
-	gofmt -w $(SOURCES)
+	gofmt -w $(ALL_SOURCES)

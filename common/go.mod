@@ -15,4 +15,4 @@ require (
 	go.uber.org/atomic v1.7.0 // indirect
 )
 
-replace github.com/n1kos03/User_Recommendations/services/recommendations => ../services/recommendations
+// replace github.com/n1kos03/User_Recommendations/services/recommendations => ../services/recommendations

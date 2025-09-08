@@ -38,9 +38,7 @@ services:
     image: postgres:latest
     container_name: postgres
     environment:
-      name: user_db
-      POSTGRES_DB: user_db
-      POSTGRES_USER: user
+      POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U user"]
@@ -50,6 +48,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
+      - ./init:/docker-entrypoint-initdb.d
       - user-db-data:/var/lib/postgresql/data
 
   adminer:
@@ -61,11 +60,23 @@ services:
   user-service:
     build:
       context: .
-      dockerfile: internal/user/Dockerfile
+      dockerfile: services/user/Dockerfile
     container_name: user-service
     ports:
       - "8080:8080"
-    command: bash -c "sleep 10 && ./user-service"
+    command: sh -c "sleep 5 && ./user-service"
+    depends_on:
+      - postgres
+      - kafka
+    
+  product-service:
+    build:
+      context: .
+      dockerfile: services/product/Dockerfile
+    container_name: product-service
+    ports:
+      - "8081:8080"
+    command: sh -c "sleep 5 && ./product-service"
     depends_on:
       - postgres
       - kafka

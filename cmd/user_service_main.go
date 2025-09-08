@@ -3,9 +3,9 @@ package main
 import (
 	"net/http"
 
-	"github.com/n1kos03/User_Recommendations/internal/database"
-	"github.com/n1kos03/User_Recommendations/internal/kafka"
-	"github.com/n1kos03/User_Recommendations/internal/user/handlers"
+	"github.com/n1kos03/User_Recommendations/common/database"
+	"github.com/n1kos03/User_Recommendations/common/kafka"
+	"github.com/n1kos03/User_Recommendations/services/user/handlers"
 
 	"log/slog"
 
@@ -14,7 +14,7 @@ import (
 
 func main() {
 	cfg := database.DBConfig{
-		User:    "user",
+		User:    "admin",
 		Pass:    "password",
 		Name:    "user_db",
 		Host:    "postgres",
@@ -35,7 +35,7 @@ func main() {
 
 	DB.CheckDBConnection()
 
-	DB.RunMigrations()
+	DB.RunMigrations("file://common/database/migrations/user-service", cfg.Name)
 
 	produser, err := kafka.NewProducer([]string{"kafka:9092"})
 	if err != nil {

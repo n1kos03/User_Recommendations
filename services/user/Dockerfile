@@ -1,17 +1,25 @@
-FROM golang:latest
+FROM golang:latest AS builder
 
 WORKDIR /app
 
-COPY ./go.mod ./go.sum ./
+COPY common/ common/
+COPY services/user/ services/user/
+COPY cmd/user_service_main.go cmd/user_service_main.go
+
+RUN go work init ./common ./services/user
 RUN go mod download
 
-COPY cmd/user_service_main.go cmd/user_service_main.go
-COPY internal/database/ internal/database/
-COPY internal/kafka/producer.go internal/kafka/producer.go
-COPY internal/models/user.go internal/models/user.go
-COPY internal/models/kafka_events.go internal/models/kafka_events.go
-COPY internal/user/ internal/user/
+RUN CGO_ENABLED=1 GOOS=linux go build -o user-service ./cmd/user_service_main.go
 
-RUN go build -o user-service ./cmd/user_service_main.go
+FROM debian:bookworm-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    librdkafka1 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /app/user-service .
+COPY common/database/migrations/user-service common/database/migrations/user-service
 
 EXPOSE 8080

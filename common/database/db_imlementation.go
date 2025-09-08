@@ -53,7 +53,7 @@ func (db *Database) CheckDBConnection() {
 	}
 }
 
-func (db *Database) RunMigrations() {
+func (db *Database) RunMigrations(dir string, dbName string) {
 	slog.Info("Running migrations")
 
 	driver, err := postgres.WithInstance(db.Conn, &postgres.Config{})
@@ -63,8 +63,8 @@ func (db *Database) RunMigrations() {
 	}
 
 	m, err := migrate.NewWithDatabaseInstance(
-		"file://internal/database/migrations",
-		"user_db", driver)
+		dir,
+		dbName, driver)
 	if err != nil {
 		slog.Error("Error creating migrate instance", "Error: ", err)
 		return
