@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/n1kos03/User_Recommendations/common/database"
+	"github.com/n1kos03/User_Recommendations/common/kafka"
 	"github.com/n1kos03/User_Recommendations/services/product/handlers"
 )
 
@@ -33,7 +34,13 @@ func main() {
 
 	DB.RunMigrations("file://common/database/migrations/product-service", cfg.Name)
 
-	productService := handlers.NewProductService(DB)
+	producer, err := kafka.NewProducer([]string{"kafka:9092"})
+	if err != nil {
+		slog.Error("Error while creating new instance for producer", "Error: ", err)
+	}
+	defer producer.Close()
+	
+	productService := handlers.NewProductService(DB, producer)
 
 	router := gin.Default()
 

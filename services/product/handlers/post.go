@@ -28,6 +28,20 @@ func (h *ProductService) POSTProduct(c *gin.Context) {
 		return
 	}
 
+	productMessage := models.ProductMessageEvent{
+		ProductID: product.ID,
+		ProductTags: product.Tags,
+	}
+
+	err = h.Producer.SendMessage("product_updates", []any{productMessage})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Error while sending message to kafka",
+		})
+		slog.Error("Error while sending message to kafka", "Error: ", err)
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Product created successfully",
 		"product": product,
