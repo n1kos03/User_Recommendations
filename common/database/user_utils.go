@@ -39,7 +39,7 @@ func (db *Database) GetAllUsers() ([]models.User, error) {
 }
 
 func (db *Database) InsertUser(user *models.User) error {
-	_, err := db.Conn.Exec("INSERT INTO users (name, email, password, favorite_product) VALUES ($1, $2, $3, $4)", user.Name, user.Email, user.Password, pq.Array(user.FavoriteProduct))
+	err := db.Conn.QueryRow("INSERT INTO users (name, email, password, favorite_product) VALUES ($1, $2, $3, $4) RETURNING id", user.Name, user.Email, user.Password, pq.Array(user.FavoriteProduct)).Scan(&user.ID)
 	if err != nil {
 		return err
 	}

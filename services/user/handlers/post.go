@@ -30,7 +30,7 @@ func (h *UserService) POSTUser(c *gin.Context) {
 
 	userKafkaEvent := models.UserMessageEvent{
 		UserID:  user.ID,
-		Product: user.FavoriteProduct,
+		FavoriteProducts: user.FavoriteProduct,
 	}
 
 	if err := h.Producer.SendMessage("user_updates", []any{userKafkaEvent}); err != nil {
