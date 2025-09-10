@@ -38,8 +38,9 @@ func main() {
 	router := gin.Default()
 
 	router.POST("/products", productService.POSTProduct)
-	// router.GET("/products", productService.GETProduct)
-	// router.PUT("/products/:id", productService.PUTProduct)
+	router.GET("/products/:id", productService.GETProduct)
+	router.GET("/products", productService.GETProductByTag)
+	router.PUT("/products/:id", productService.PUTProduct)
 
 	if err := router.Run(":8080"); err != nil {
 		slog.Error("Error running server", "Error: ", err)
